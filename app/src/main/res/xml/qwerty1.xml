@@ -1,0 +1,23 @@
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="5px"
+    android:keyHeight="60dp"
+    android:keyWidth="50%p"
+    android:verticalGap="5px">
+    <Row>
+        <Key
+            android:codes="1"
+            android:keyLabel="Clear" />
+        <Key
+            android:codes="2"
+            android:keyLabel="Card Num" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="3"
+            android:keyLabel="CCV" />
+        <Key
+            android:codes="4"
+            android:keyLabel="Date" />
+    </Row>
+</Keyboard>

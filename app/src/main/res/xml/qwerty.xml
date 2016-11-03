@@ -1,0 +1,21 @@
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="5px"
+    android:keyHeight="60dp"
+    android:keyWidth="50%p"
+    android:verticalGap="5px">
+    <Row android:keyWidth="25%p">
+        <Key
+            android:codes="5"
+            android:keyIcon="@android:drawable/radiobutton_off_background"
+       />
+        <Key
+            android:codes="6"
+            android:keyIcon="@android:drawable/radiobutton_off_background" />
+        <Key
+            android:codes="7"
+            android:keyIcon="@android:drawable/radiobutton_off_background" />
+        <Key
+            android:codes="8"
+            android:keyIcon="@android:drawable/radiobutton_off_background" />
+    </Row>
+</Keyboard>
