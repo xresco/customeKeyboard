@@ -1,5 +1,6 @@
 package com.example.abed.customkeyboard;
 
+import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -7,6 +8,13 @@ import android.media.AudioManager;
 import android.view.View;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by abed on 11/3/16.
@@ -17,7 +25,8 @@ public class SimpleIME extends InputMethodService
 
     private KeyboardView kv;
     private Keyboard keyboard;
-    private Keyboard secureKeyboard;
+    private Keyboard creditCardPassword;
+    private Keyboard userNamePassowrd;
 
 
     private boolean caps = false;
@@ -26,10 +35,13 @@ public class SimpleIME extends InputMethodService
     public View onCreateInputView() {
         kv = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);
         keyboard = new Keyboard(this, R.xml.qwerty);
-        secureKeyboard = new Keyboard(this, R.xml.qwerty1);
+        userNamePassowrd = new Keyboard(this, R.xml.kb_username_password);
+        creditCardPassword = new Keyboard(this, R.xml.qwerty1);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
         kv.setPreviewEnabled(false);
+
+
         return kv;
     }
 
@@ -75,16 +87,46 @@ public class SimpleIME extends InputMethodService
                 ic.commitText("CCV", 1);
                 break;
             case 4:
-                ic.commitText("Date "+getCurrentInputEditorInfo().packageName, 1);
-                kv.setKeyboard(secureKeyboard);
+                ic.commitText("Date", 1);
                 break;
             case 5:
-                kv.setKeyboard(secureKeyboard);
+                kv.setKeyboard(userNamePassowrd);
+                break;
+            case 9:
+                kv.setKeyboard(keyboard);
+                break;
+            case 21:
+                ic.commitText(getCredential(getCurrentInputEditorInfo().packageName).username, 1);
+                break;
+            case 22:
+                ic.commitText(getCredential(getCurrentInputEditorInfo().packageName).password, 1);
                 break;
         }
 
+
     }
 
+    private Credentials getCredential(String packageName) {
+        SharedPreferences sharedPreferences = getSharedPreferences("PREF_NAME", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        List<Credentials> credentialsList;
+        String jsonPreferences = sharedPreferences.getString("KEY", null);
+
+        Gson gson = new Gson();
+        if (jsonPreferences != null) {
+            Type type = new TypeToken<List<Credentials>>() {
+            }.getType();
+            credentialsList = gson.fromJson(jsonPreferences, type);
+        } else {
+            credentialsList = new ArrayList<>();
+        }
+        for (Credentials credentials : credentialsList) {
+            if (packageName.contains(credentials.app))
+                return credentials;
+        }
+        return new Credentials("", "username", "password");
+    }
 
     @Override
     public void onPress(int primaryCode) {
